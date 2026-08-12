@@ -30,7 +30,7 @@ export default function SidebarMenu({ visible, onClose, currentRoute }) {
     { title: "Formulador de Dietas", route: "/formulador" },
     { title: "Módulo de Monitoreo de Peso", route: "/monitoreo" },
     { title: "Maximizador de Ganancia", route: "/maximizador" },
-    { title: "Control Financiero", route: "/financiero" },
+    { title: "Control Financiero", route: "/finanzas" },
     { title: "Semáforo Epidemiológico", route: "/semaforo" },
     { title: "Inteligencia", route: "/inteligencia" },
     { title: "ChatIA", route: "/chatia" },
