@@ -7,7 +7,6 @@ import {
   ScrollView,
   TextInput,
   Modal,
-  Pressable,
   Alert,
   ActivityIndicator,
 } from "react-native";
@@ -25,6 +24,7 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../services/firebaseConfig";
 import SidebarMenu from "../components/SidebarMenu";
+
 export default function LotesScreen() {
   const router = useRouter();
 
@@ -57,27 +57,26 @@ export default function LotesScreen() {
   const [fechaPeso, setFechaPeso] = useState("");
   const [pesoPromedio, setPesoPromedio] = useState("");
   const [dieta, setDieta] = useState("");
+  const [ingredientes, setIngredientes] = useState(""); // NUEVO
 
   const [pesoFinal, setPesoFinal] = useState("");
   const [dietaFinal, setDietaFinal] = useState("");
+  const [ingredientesFinal, setIngredientesFinal] = useState(""); // NUEVO
 
   // =========================================================================
   // FUNCIONES DE VALIDACIÓN Y FORMATEO DE INPUTS
   // =========================================================================
 
-  // Permite solo letras y espacios (ideal para Nombres y Razas)
   const formatSoloLetras = (text) => {
     return text.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑ\s]/g, "");
   };
 
-  // Permite solo números (ideal para cantidades y pesos)
   const formatSoloNumeros = (text) => {
     return text.replace(/[^0-9]/g, "");
   };
 
-  // Formatea automáticamente la fecha agregando las plecas DD/MM/YYYY
   const formatFecha = (text) => {
-    let cleaned = text.replace(/\D/g, ""); // Solo deja los números
+    let cleaned = text.replace(/\D/g, "");
     if (cleaned.length > 2) {
       cleaned = cleaned.slice(0, 2) + "/" + cleaned.slice(2);
     }
@@ -87,7 +86,6 @@ export default function LotesScreen() {
     return cleaned;
   };
 
-  // Validar que la fecha sea una fecha real en calendario (DD/MM/YYYY)
   const isValidDate = (dateString) => {
     const regEx = /^\d{2}\/\d{2}\/\d{4}$/;
     if (!dateString.match(regEx)) return false;
@@ -131,11 +129,6 @@ export default function LotesScreen() {
 
     return () => unsubscribe();
   }, []);
-
-  const navigateTo = (route) => {
-    setMenuVisible(false);
-    if (route) router.replace(route);
-  };
 
   const handleCrearLote = async () => {
     if (!nombreLote || !cantidadCerdos || !fechaInicio) {
@@ -249,11 +242,23 @@ export default function LotesScreen() {
     }
     try {
       const loteRef = doc(db, "lotes", selectedLote.id);
+
+      // Convierte "Maíz, Soya" en array ["Maíz", "Soya"] para el motor de inteligencia
+      const arrayIngredientes = ingredientes
+        ? ingredientes
+            .split(",")
+            .map((i) => i.trim())
+            .filter(Boolean)
+        : [];
+
       await addDoc(collection(loteRef, "historialPesos"), {
         fecha: fechaPeso,
         pesoPromedio: Number(pesoPromedio),
         dietaAplicada: dieta,
+        ingredientes: arrayIngredientes,
+        timestamp: new Date().toISOString(),
       });
+
       setModalPeso(false);
       limpiarFormularios();
       Alert.alert("Éxito", "Avance registrado.");
@@ -270,11 +275,19 @@ export default function LotesScreen() {
     try {
       const user = auth.currentUser;
 
+      const arrayIngredientesFinal = ingredientesFinal
+        ? ingredientesFinal
+            .split(",")
+            .map((i) => i.trim())
+            .filter(Boolean)
+        : [];
+
       await updateDoc(doc(db, "lotes", selectedLote.id), {
         estado: "CERRADO",
         fechaCierre: new Date().toISOString(),
         pesoFinalPromedio: Number(pesoFinal),
         dietaFinal,
+        ingredientesClave: arrayIngredientesFinal,
       });
 
       await updateDoc(doc(db, "fincas", user.uid), {
@@ -300,9 +313,11 @@ export default function LotesScreen() {
     setFechaBaja("");
     setPesoPromedio("");
     setDieta("");
+    setIngredientes("");
     setFechaPeso("");
     setPesoFinal("");
     setDietaFinal("");
+    setIngredientesFinal("");
   };
 
   const abrirModalEditar = (lote) => {
@@ -690,34 +705,48 @@ export default function LotesScreen() {
         </View>
       </Modal>
 
+      {/* MODAL CORREGIDO: CONTROL DE PESO */}
       <Modal visible={modalPeso} animationType="fade" transparent={true}>
         <View style={styles.modalCenter}>
           <View style={styles.modalBox}>
-            <Text style={styles.modalTitle}>Control de Peso</Text>
-            <Text style={styles.inputLabel}>Fecha de Pesaje</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={fechaPeso}
-              onChangeText={(t) => setFechaPeso(formatFecha(t))}
-              keyboardType="numeric"
-              maxLength={10}
-              placeholder="Ej. 11/08/2026"
-            />
-            <Text style={styles.inputLabel}>Peso Promedio Actual (kg)</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={pesoPromedio}
-              onChangeText={(t) => setPesoPromedio(formatSoloNumeros(t))}
-              keyboardType="numeric"
-              placeholder="Ej: 50"
-            />
-            <Text style={styles.inputLabel}>Dieta Aplicada</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={dieta}
-              onChangeText={setDieta}
-              placeholder="Ej: Desarrollo Fase 1"
-            />
+            <Text style={styles.modalTitle}>
+              Control de Peso: {selectedLote?.nombre}
+            </Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.inputLabel}>Fecha de Pesaje</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={fechaPeso}
+                onChangeText={(t) => setFechaPeso(formatFecha(t))}
+                keyboardType="numeric"
+                maxLength={10}
+                placeholder="Ej. 11/08/2026"
+              />
+              <Text style={styles.inputLabel}>Peso Promedio Actual (kg)</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={pesoPromedio}
+                onChangeText={(t) => setPesoPromedio(formatSoloNumeros(t))}
+                keyboardType="numeric"
+                placeholder="Ej: 50"
+              />
+              <Text style={styles.inputLabel}>Dieta Aplicada</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={dieta}
+                onChangeText={setDieta}
+                placeholder="Ej: Desarrollo Fase 1"
+              />
+              <Text style={styles.inputLabel}>
+                Ingredientes Clave (Separados por coma)
+              </Text>
+              <TextInput
+                style={styles.modalInput}
+                value={ingredientes}
+                onChangeText={setIngredientes}
+                placeholder="Ej: Maíz, Soya, Calcio"
+              />
+            </ScrollView>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.cancelBtn}
@@ -736,6 +765,7 @@ export default function LotesScreen() {
         </View>
       </Modal>
 
+      {/* MODAL CORREGIDO: CERRAR LOTE */}
       <Modal visible={modalCerrar} animationType="slide" transparent={true}>
         <View style={styles.modalCenter}>
           <View style={styles.modalBox}>
@@ -746,21 +776,32 @@ export default function LotesScreen() {
               Para enviar este lote al historial, ingresa los datos finales de
               rendimiento.
             </Text>
-            <Text style={styles.inputLabel}>Peso Promedio Final (kg)</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={pesoFinal}
-              onChangeText={(t) => setPesoFinal(formatSoloNumeros(t))}
-              keyboardType="numeric"
-              placeholder="Ej: 110"
-            />
-            <Text style={styles.inputLabel}>Nombre de Dieta Principal</Text>
-            <TextInput
-              style={styles.modalInput}
-              value={dietaFinal}
-              onChangeText={setDietaFinal}
-              placeholder="Ej: Engorde Máximo"
-            />
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <Text style={styles.inputLabel}>Peso Promedio Final (kg)</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={pesoFinal}
+                onChangeText={(t) => setPesoFinal(formatSoloNumeros(t))}
+                keyboardType="numeric"
+                placeholder="Ej: 110"
+              />
+              <Text style={styles.inputLabel}>Nombre de Dieta Principal</Text>
+              <TextInput
+                style={styles.modalInput}
+                value={dietaFinal}
+                onChangeText={setDietaFinal}
+                placeholder="Ej: Engorde Máximo"
+              />
+              <Text style={styles.inputLabel}>
+                Ingredientes Clave de la Dieta
+              </Text>
+              <TextInput
+                style={styles.modalInput}
+                value={ingredientesFinal}
+                onChangeText={setIngredientesFinal}
+                placeholder="Ej: Maíz, Soya, Calcio"
+              />
+            </ScrollView>
             <View style={styles.modalButtons}>
               <TouchableOpacity
                 style={styles.cancelBtn}

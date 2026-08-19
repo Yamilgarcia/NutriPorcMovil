@@ -160,7 +160,7 @@ export default function DashboardScreen() {
       <SidebarMenu
         visible={menuVisible}
         onClose={() => setMenuVisible(false)}
-        currentRoute="/dashboard"
+        currentRoute="/Dashboard"
       />
 
       {/* CONTENIDO PRINCIPAL DEL DASHBOARD */}

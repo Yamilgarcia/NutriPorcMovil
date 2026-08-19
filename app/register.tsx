@@ -60,7 +60,7 @@ export default function RegisterScreen() {
       });
 
       Alert.alert("Éxito", "Finca registrada correctamente.");
-      router.replace("/dashboard");
+      router.replace("/Dashboard");
     } catch (error) {
       Alert.alert("Error de Registro", error.message);
     }

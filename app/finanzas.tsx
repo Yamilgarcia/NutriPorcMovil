@@ -42,7 +42,7 @@ export default function FinanzasScreen() {
   const [transacciones, setTransacciones] = useState([]);
 
   // Formulario Transacción
-  const [txTipo, setTxTipo] = useState("GASTO"); // "GASTO" | "INGRESO"
+  const [txTipo, setTxTipo] = useState("GASTO");
   const [txCategoria, setTxCategoria] = useState("Alimento");
   const [modalCategoria, setModalCategoria] = useState(false);
   const [txConcepto, setTxConcepto] = useState("");
@@ -417,7 +417,7 @@ export default function FinanzasScreen() {
             </ScrollView>
 
             {/* ========================================================= */}
-            {/* FORMULARIO REGISTRAR TRANSACCIÓN (DISEÑO MÓVIL CORREGIDO) */}
+            {/* FORMULARIO REGISTRAR TRANSACCIÓN RESPONSIVO */}
             {/* ========================================================= */}
             <View
               style={[
@@ -427,9 +427,14 @@ export default function FinanzasScreen() {
                   : styles.formCardIngreso,
               ]}
             >
-              <View style={styles.formHeader}>
+              <View style={styles.formHeaderStacked}>
                 <View
-                  style={{ flexDirection: "row", alignItems: "center", gap: 5 }}
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 5,
+                    marginBottom: 12,
+                  }}
                 >
                   <Ionicons
                     name="trending-down-outline"
@@ -438,6 +443,7 @@ export default function FinanzasScreen() {
                   />
                   <Text style={styles.formTitle}>Registrar Transacción</Text>
                 </View>
+
                 <View style={styles.toggleGroup}>
                   <TouchableOpacity
                     style={[
@@ -480,7 +486,6 @@ export default function FinanzasScreen() {
                 </View>
               </View>
 
-              {/* CAMPOS APILADOS PARA MÓVIL */}
               <View style={styles.inputStack}>
                 <Text style={styles.inputLabel}>Categoría</Text>
                 <TouchableOpacity
@@ -506,7 +511,7 @@ export default function FinanzasScreen() {
                 />
               </View>
 
-              <View style={styles.inputsRow}>
+              <View style={styles.inputsRowResponsive}>
                 <View style={[styles.inputStack, { flex: 1, marginBottom: 0 }]}>
                   <Text style={styles.inputLabel}>Monto (C$)</Text>
                   <TextInput
@@ -523,6 +528,8 @@ export default function FinanzasScreen() {
                     {
                       backgroundColor:
                         txTipo === "GASTO" ? "#E74C3C" : "#10B981",
+                      flex: 1,
+                      height: 42,
                     },
                   ]}
                   onPress={handleGuardarTransaccion}
@@ -733,7 +740,11 @@ export default function FinanzasScreen() {
                 </View>
                 <TouchableOpacity
                   style={styles.calcBtn}
-                  onPress={() => setShowBalanceCierre(true)}
+                  onPress={() => {
+                    if (!ingresoFinalVenta)
+                      alert("Ingresa el monto de la venta final.");
+                    else setShowBalanceCierre(true);
+                  }}
                 >
                   <Text style={styles.calcBtnText}>Calcular Rendimiento</Text>
                 </TouchableOpacity>
@@ -1087,7 +1098,7 @@ const styles = StyleSheet.create({
   kpiBadgeText: { fontSize: 9, color: "#922B21", fontWeight: "bold" },
   kpiValueBig: { fontSize: 24, fontWeight: "900", color: "#0F172A" },
 
-  // Estilos Corregidos de Formulario para Móvil
+  // Estilos de Formulario Corregidos (100% Responsive)
   formCard: {
     backgroundColor: "#FFF",
     borderRadius: 8,
@@ -1098,40 +1109,52 @@ const styles = StyleSheet.create({
   },
   formCardGasto: { borderColor: "#F5B7B1" },
   formCardIngreso: { borderColor: "#A2D9CE" },
-  formHeader: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+
+  formHeaderStacked: {
+    flexDirection: "column",
+    alignItems: "stretch",
     marginBottom: 15,
   },
   formTitle: { fontSize: 14, fontWeight: "bold", color: "#2C3E50" },
+
   toggleGroup: {
     flexDirection: "row",
     backgroundColor: "#F8FAFC",
     borderRadius: 6,
-    padding: 2,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: "#E2E8F0",
+    width: "100%",
   },
-  toggleBtn: { paddingVertical: 6, paddingHorizontal: 10, borderRadius: 4 },
+  toggleBtn: {
+    flex: 1,
+    paddingVertical: 8,
+    alignItems: "center",
+    borderRadius: 4,
+  },
   toggleBtnGasto: { backgroundColor: "#E74C3C" },
   toggleBtnIngreso: { backgroundColor: "#10B981" },
-  toggleBtnText: { fontSize: 11, fontWeight: "bold", color: "#64748B" },
+  toggleBtnText: { fontSize: 12, fontWeight: "bold", color: "#64748B" },
   toggleBtnTextActive: { color: "#FFF" },
 
-  // Contenedores apilados en vez de horizontales para que no se aplaste en pantallas de celular
   inputStack: { marginBottom: 15 },
-  inputsRow: { flexDirection: "row", gap: 10, alignItems: "flex-end" },
+  inputsRowResponsive: {
+    flexDirection: "row",
+    gap: 10,
+    alignItems: "flex-end",
+  },
   inputLabel: {
     fontSize: 10,
     fontWeight: "bold",
     color: "#0F172A",
-    marginBottom: 4,
+    marginBottom: 6,
   },
   inputBox: {
     backgroundColor: "#FFF",
     borderWidth: 1,
     borderColor: "#E2E8F0",
     borderRadius: 6,
-    padding: 10,
+    padding: 12,
     fontSize: 13,
     flexDirection: "row",
     justifyContent: "space-between",
@@ -1139,7 +1162,7 @@ const styles = StyleSheet.create({
   },
   inputText: { fontSize: 13, color: "#2C3E50" },
   submitBtn: {
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 6,
     justifyContent: "center",
@@ -1220,7 +1243,7 @@ const styles = StyleSheet.create({
   closeDesc: { fontSize: 11, color: "#64748B", marginTop: 4 },
   calcBtn: {
     backgroundColor: "#F5B7B1",
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: 15,
     borderRadius: 6,
     justifyContent: "center",
@@ -1260,6 +1283,7 @@ const styles = StyleSheet.create({
   },
   confirmCloseBtnText: { color: "#FFF", fontWeight: "bold", fontSize: 13 },
 
+  // Reportes
   kpiReportRow: { flexDirection: "row", gap: 10, marginBottom: 20 },
   kpiReportCard: {
     flex: 1,

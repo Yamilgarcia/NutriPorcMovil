@@ -24,7 +24,7 @@ export default function SidebarMenu({ visible, onClose, currentRoute }) {
 
   // Lista maestra de todas las opciones de tu app
   const menuItems = [
-    { title: "Inicio", route: "/dashboard" },
+    { title: "Inicio", route: "/Dashboard" },
     { title: "Lotes y Cerdos", route: "/lotes" },
     { title: "Biblioteca de Insumos", route: "/insumos" }, // Rutas futuras
     { title: "Formulador de Dietas", route: "/formulador" },

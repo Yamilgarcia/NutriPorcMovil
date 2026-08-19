@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { useRouter } from "expo-router";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../services/firebaseConfig.js";
+import { auth } from "../services/firebaseConfig.js";
 
 export default function LoginScreen() {
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function LoginScreen() {
     }
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.replace("/dashboard");
+      router.replace("/Dashboard");
     } catch (error) {
       Alert.alert(
         "Error de Acceso",
