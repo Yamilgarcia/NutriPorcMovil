@@ -208,6 +208,7 @@ export default function InsumosScreen() {
             <TextInput
               style={styles.searchInput}
               placeholder="Buscar subproducto..."
+              placeholderTextColor="#7F8C8D"
               value={searchQuery}
               onChangeText={setSearchQuery}
             />
@@ -232,6 +233,7 @@ export default function InsumosScreen() {
             <TextInput
               style={styles.addInput}
               placeholder="Nombre (ej. Suero)"
+              placeholderTextColor="#7F8C8D"
               value={nuevoNombre}
               onChangeText={(t) => setNuevoNombre(formatNombreInsumo(t))}
             />
@@ -239,6 +241,7 @@ export default function InsumosScreen() {
               <TextInput
                 style={[styles.addInput, { flex: 1 }]}
                 placeholder="% Proteína"
+                placeholderTextColor="#7F8C8D"
                 value={nuevoProteina}
                 onChangeText={(t) => setNuevoProteina(formatDecimales(t))}
                 keyboardType="numeric"
@@ -246,6 +249,7 @@ export default function InsumosScreen() {
               <TextInput
                 style={[styles.addInput, { flex: 1 }]}
                 placeholder="Energía (Kcal)"
+                placeholderTextColor="#7F8C8D"
                 value={nuevoEnergia}
                 onChangeText={(t) => setNuevoEnergia(formatDecimales(t))}
                 keyboardType="numeric"
@@ -255,6 +259,7 @@ export default function InsumosScreen() {
               <TextInput
                 style={[styles.addInput, { flex: 1 }]}
                 placeholder="% Fibra"
+                placeholderTextColor="#7F8C8D"
                 value={nuevoFibra}
                 onChangeText={(t) => setNuevoFibra(formatDecimales(t))}
                 keyboardType="numeric"
@@ -262,6 +267,7 @@ export default function InsumosScreen() {
               <TextInput
                 style={[styles.addInput, { flex: 1 }]}
                 placeholder="Costo C$/lb"
+                placeholderTextColor="#7F8C8D"
                 value={nuevoCosto}
                 onChangeText={(t) => setNuevoCosto(formatDecimales(t))}
                 keyboardType="numeric"

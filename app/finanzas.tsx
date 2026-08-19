@@ -506,6 +506,7 @@ export default function FinanzasScreen() {
                       ? "Ej. Hierro y Vitaminas"
                       : "Ej. Venta de 1 cerdo"
                   }
+                  placeholderTextColor="#7F8C8D"
                   value={txConcepto}
                   onChangeText={setTxConcepto}
                 />
@@ -517,6 +518,7 @@ export default function FinanzasScreen() {
                   <TextInput
                     style={styles.inputBox}
                     placeholder="0.00"
+                    placeholderTextColor="#7F8C8D"
                     value={txMonto}
                     onChangeText={(t) => setTxMonto(formatDecimal(t))}
                     keyboardType="numeric"
@@ -592,6 +594,7 @@ export default function FinanzasScreen() {
                               value={editTxConcepto}
                               onChangeText={setEditTxConcepto}
                               placeholder="Concepto"
+                              placeholderTextColor="#7F8C8D"
                             />
                             <View
                               style={{
@@ -609,6 +612,7 @@ export default function FinanzasScreen() {
                                 }
                                 keyboardType="numeric"
                                 placeholder="Monto"
+                                placeholderTextColor="#7F8C8D"
                               />
                             </View>
                           </View>
@@ -733,6 +737,7 @@ export default function FinanzasScreen() {
                   <TextInput
                     style={styles.inputBox}
                     placeholder="Ej. 45000.00"
+                    placeholderTextColor="#7F8C8D"
                     value={ingresoFinalVenta}
                     onChangeText={(t) => setIngresoFinalVenta(formatDecimal(t))}
                     keyboardType="numeric"

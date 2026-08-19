@@ -406,6 +406,7 @@ export default function SemaforoScreen() {
             <TextInput
               style={styles.textInput}
               placeholder="Ej. Enrofloxacina, Penicilina..."
+              placeholderTextColor="#7F8C8D"
               value={medicamento}
               onChangeText={setMedicamento}
             />
@@ -419,6 +420,7 @@ export default function SemaforoScreen() {
                 { height: 80, textAlignVertical: "top" },
               ]}
               placeholder="Describe los síntomas observados..."
+              placeholderTextColor="#7F8C8D"
               value={notas}
               onChangeText={setNotas}
               multiline

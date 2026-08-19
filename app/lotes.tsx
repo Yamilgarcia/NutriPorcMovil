@@ -358,6 +358,7 @@ export default function LotesScreen() {
           <TextInput
             style={styles.searchInput}
             placeholder="Buscar lote o código..."
+            placeholderTextColor="#000000"
           />
           <TouchableOpacity
             style={styles.newLotButton}

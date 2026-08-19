@@ -334,6 +334,7 @@ export default function FormuladorScreen() {
                 <TextInput
                   style={styles.searchInput}
                   placeholder="Buscar insumo..."
+                  placeholderTextColor="#7F8C8D"
                   value={searchInsumo}
                   onChangeText={setSearchInsumo}
                 />
