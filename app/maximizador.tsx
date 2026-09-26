@@ -323,7 +323,7 @@ export default function MaximizadorScreen() {
 
                   <View style={styles.optimalStatBox}>
                     <Text style={styles.optimalStatLabel}>
-                      GANANCIA MÁXIMA PROYECTADA
+                      Ganancia Maxima Proyectada
                     </Text>
                     <Text style={styles.optimalStatValue}>
                       C${" "}
